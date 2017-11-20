@@ -12,7 +12,8 @@ from datetime import datetime
 def get_env_vars(getenv=getenv):
     return {
         'REDIS_HOST': getenv('REDIS_HOST', 'localhost'),
-        'REDIS_PORT': getenv('REDIS_PORT', 6379)
+        'REDIS_PORT': int(getenv('REDIS_PORT'), 6379),
+        'CHECK_INTERVAL': int(getenv('CHECK_INTERVAL')), 60)
     }
 
 
@@ -53,7 +54,7 @@ def initialize_scheduler(scheduler, env):
         'scheduled_time': datetime.utcnow(),
         'func': make_requests,
         'args': [env],
-        'interval': 60
+        'interval': env['CHECK_INTERVAL']
     }
     scheduler.schedule(**kwargs)
 

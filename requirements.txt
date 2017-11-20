@@ -4,7 +4,6 @@ chardet==3.0.4
 cytoolz==0.8.2
 gunicorn==19.7.1
 multidict==3.3.2
-pkg-resources==0.0.0
 redis==2.10.6
 requests==2.18.4
 rq==0.9.1
