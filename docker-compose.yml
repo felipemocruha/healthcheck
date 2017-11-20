@@ -1,0 +1,42 @@
+version: "3.3"
+
+services:
+  server:
+    image: healthcheck_server:0.1
+    build:
+      context: .
+      dockerfile: docker/server/Dockerfile
+    env_file:
+      - config/config.env
+    depends_on:
+      - redis
+    networks:
+      - healthcheck-network
+      - proxy
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.port=${API_PORT}"
+        - "traefik.frontend.rule=Host:"
+        - "traefik.docker.network=proxy"
+    command: sh start_server.sh
+
+  redis:
+    image: healthcheck_redis:0.1
+    build:
+      context: .
+      dockerfile: docker/redis/Dockerfile
+    networks:
+      - healthcheck-network
+    volumes:
+      - healthcheck-data
+
+volumes:
+  healthcheck-data:
+    external: true
+
+networks:
+  healthcheck-network:
+    driver: overlay
+  proxy:
+    external: true
